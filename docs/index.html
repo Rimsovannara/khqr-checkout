@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KHQR Checkout — Sang Café</title>
+  <meta name="description" content="Full-stack Cambodian storefront demo with ABA PayWay KHQR checkout." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- top bar -->
+  <header class="topbar">
+    <div class="wrap topbar-in">
+      <div class="brand">
+        <span class="logo">ស</span>
+        <div>
+          <strong>Sang Café</strong>
+          <span class="brand-sub">សាំងកាហ្វេ · Phnom Penh</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span id="modeBadge" class="badge badge-demo" title="Payment mode">DEMO MODE</span>
+        <button id="cartBtn" class="cart-btn" aria-label="Open cart">
+          🛒 <span id="cartCount" class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- hero -->
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="eyebrow">Full-stack demo · ABA PayWay integration</p>
+        <h1>Order coffee &amp; snacks, pay by <span class="accent">KHQR</span>.</h1>
+        <p class="lede">Scan once with any Cambodian banking app — ABA, ACLEDA, Wing, and more.
+          A working storefront wired to the <a href="https://github.com/Rimsovannara/payway-node">payway-node</a> SDK.</p>
+        <a href="#menu" class="btn btn-primary">Browse the menu</a>
+      </div>
+      <div class="hero-card" aria-hidden="true">
+        <div class="qr-mini">
+          <div class="qr-mini-grid" id="heroQr"></div>
+          <div class="khqr-tag">KHQR</div>
+        </div>
+        <p class="hero-card-note">One QR · every bank</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- menu -->
+  <main class="wrap">
+    <section id="menu" class="menu-head">
+      <h2>Menu · ម៉ឺនុយ</h2>
+      <p class="muted">Prices in USD. Tap to add to your cart.</p>
+    </section>
+    <section id="grid" class="grid" aria-live="polite"><!-- products injected here --></section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p>Built by <a href="https://github.com/Rimsovannara">Rim Sovannara</a> · full-stack demo · not affiliated with ABA Bank.</p>
+      <p class="muted small">Source: <a href="https://github.com/Rimsovannara/khqr-checkout">github.com/Rimsovannara/khqr-checkout</a></p>
+    </div>
+  </footer>
+
+  <!-- cart drawer -->
+  <div id="cartOverlay" class="overlay" hidden></div>
+  <aside id="cartDrawer" class="drawer" hidden aria-label="Shopping cart">
+    <div class="drawer-head">
+      <h3>Your cart</h3>
+      <button id="cartClose" class="icon-btn" aria-label="Close cart">✕</button>
+    </div>
+    <div id="cartLines" class="cart-lines"><!-- lines injected --></div>
+    <div class="drawer-foot">
+      <div class="total-row"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
+      <button id="checkoutBtn" class="btn btn-primary btn-block" disabled>Pay with KHQR</button>
+    </div>
+  </aside>
+
+  <!-- checkout / QR modal -->
+  <div id="payOverlay" class="overlay" hidden></div>
+  <div id="payModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="payTitle">
+    <button id="payClose" class="icon-btn modal-close" aria-label="Close">✕</button>
+
+    <!-- step 1: details -->
+    <div id="stepDetails" class="pay-step">
+      <h3 id="payTitle">Checkout</h3>
+      <p class="muted small">Sandbox demo — no real payment is taken.</p>
+      <form id="custForm" class="cust-form">
+        <div class="field-row">
+          <label>First name<input id="fFirst" name="firstname" value="Sok" autocomplete="given-name" required /></label>
+          <label>Last name<input id="fLast" name="lastname" value="Dara" autocomplete="family-name" required /></label>
+        </div>
+        <label>Email<input id="fEmail" name="email" type="email" value="sok@example.com" autocomplete="email" required /></label>
+        <label>Phone (optional)<input id="fPhone" name="phone" type="tel" value="" autocomplete="tel" placeholder="0XX XXX XXX" /></label>
+        <div class="pay-summary"><span>Amount due</span><strong id="paySummaryTotal">$0.00</strong></div>
+        <button type="submit" class="btn btn-primary btn-block">Generate KHQR</button>
+      </form>
+    </div>
+
+    <!-- step 2: QR -->
+    <div id="stepQr" class="pay-step" hidden>
+      <h3>Scan to pay</h3>
+      <div class="khqr-card">
+        <div class="khqr-top"><span class="khqr-brand">KHQR</span><span id="qrAmount" class="khqr-amount">$0.00</span></div>
+        <div id="qrBox" class="qr-box"><!-- QR canvas injected --></div>
+        <p class="khqr-merchant">SANG CAFE CO., LTD</p>
+        <p class="muted small" id="qrTran"></p>
+      </div>
+      <p class="muted small center">Open your banking app → scan → confirm.</p>
+      <button id="simulatePay" class="btn btn-primary btn-block">Simulate payment (demo)</button>
+      <p class="muted small center pending">⏳ Waiting for payment…</p>
+    </div>
+
+    <!-- step 3: success -->
+    <div id="stepDone" class="pay-step center" hidden>
+      <div class="check">✓</div>
+      <h3>Payment received</h3>
+      <p class="muted">Order <span id="doneTran" class="mono"></span> · <span id="doneAmount"></span></p>
+      <button id="payFinish" class="btn btn-primary btn-block">Back to shop</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

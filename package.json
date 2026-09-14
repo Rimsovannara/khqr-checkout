@@ -1,0 +1,18 @@
+{
+  "name": "khqr-checkout",
+  "version": "1.0.0",
+  "description": "Full-stack Cambodian storefront demo with ABA PayWay KHQR checkout, powered by the payway-node SDK.",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "keywords": ["khqr", "payway", "aba", "cambodia", "ecommerce", "checkout", "full-stack"],
+  "author": "Rim Sovannara",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "express": "^4.19.2",
+    "payway-node": "github:Rimsovannara/payway-node"
+  }
+}
