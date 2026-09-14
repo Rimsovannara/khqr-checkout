@@ -3,152 +3,211 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KHQR Checkout — Sang Café</title>
-  <meta name="description" content="Full-stack Cambodian storefront demo with ABA PayWay KHQR checkout." />
+  <title>Sang Café — KHQR Checkout Demo</title>
+  <meta name="description" content="Modern Cambodian coffee shop with QR-code payment. Full-stack demo with ABA PayWay KHQR checkout." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
-  <!-- top bar -->
-  <header class="topbar">
-    <div class="wrap topbar-in">
-      <a class="brand" href="#top">
-        <span class="logo">ស</span>
-        <span class="brand-text">
-          <strong>Sang Café</strong>
-          <span class="brand-sub">សាំងកាហ្វេ · Phnom Penh</span>
-        </span>
+  <!-- Header -->
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <a href="#top" class="header__brand" title="Back to top">
+        <div class="header__logo">ស</div>
+        <div class="header__branding">
+          <h1 class="header__title">Sang Café</h1>
+          <p class="header__subtitle">សាំងកាហ្វេ · Phnom Penh</p>
+        </div>
       </a>
-      <div class="topbar-right">
-        <span id="modeBadge" class="badge badge-demo" title="Payment mode">Demo mode</span>
-        <button id="cartBtn" class="cart-btn" aria-label="View cart">
-          <span class="cart-ico" aria-hidden="true">🛒</span>
-          <span id="cartCount" class="cart-count" hidden>0</span>
+      <div class="header__actions">
+        <span id="modeBadge" class="badge badge--demo" title="Payment mode">
+          <span class="badge__label">Demo</span>
+        </span>
+        <button id="cartBtn" class="header__cart" aria-label="Open cart">
+          <span class="header__cart-icon" aria-hidden="true">🛒</span>
+          <span id="cartCount" class="header__cart-count" aria-label="Items in cart" hidden>0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- hero -->
-  <section id="top" class="hero">
-    <div class="wrap hero-in">
-      <div class="hero-copy">
-        <p class="eyebrow">Scan · Pay · Done</p>
-        <h1>Order coffee &amp; snacks, pay by <span class="accent">KHQR</span>.</h1>
-        <p class="lede">One QR works with every Cambodian bank — ABA, ACLEDA, Wing and more. No app to install, no card to type.</p>
-        <a href="#menu" class="btn btn-primary">Order now</a>
+  <!-- Hero Section -->
+  <section id="top" class="hero" role="region" aria-label="Welcome section">
+    <div class="hero__inner">
+      <div class="hero__content">
+        <p class="hero__label">Premium Cambodian Coffee</p>
+        <h2 class="hero__heading">Order coffee, pay with <span class="highlight">KHQR</span></h2>
+        <p class="hero__description">One QR code works with every Cambodian bank—ABA, ACLEDA, Wing and more. Fast, secure, and simple.</p>
+        <a href="#menu" class="btn btn--primary btn--large">Start ordering</a>
       </div>
-      <div class="hero-card" aria-hidden="true">
-        <div class="qr-mini"><div class="qr-mini-grid" id="heroQr"></div></div>
-        <span class="khqr-chip">KHQR</span>
-        <p class="hero-card-note">Scan with any bank app</p>
+      <div class="hero__visual" aria-hidden="true">
+        <div class="qr-display">
+          <div class="qr-display__code" id="heroQr"></div>
+        </div>
+        <div class="qr-display__label">Scan to demo</div>
       </div>
     </div>
   </section>
 
-  <!-- menu -->
-  <main class="wrap" id="menu">
-    <div class="section-head">
-      <h2>Menu</h2>
-      <p class="muted">Tap <strong>Add</strong>, adjust the amount, then check out. Prices in USD.</p>
-    </div>
-    <section id="grid" class="grid" aria-live="polite"><!-- product cards injected --></section>
+  <!-- Menu Section -->
+  <main class="main">
+    <section id="menu" class="section">
+      <div class="section__header">
+        <h2 class="section__title">Menu</h2>
+        <p class="section__subtitle">Tap <strong>Add</strong> to start your order. All prices in USD.</p>
+      </div>
+      <div id="grid" class="grid" role="region" aria-label="Product menu" aria-live="polite">
+        <!-- Products injected here -->
+      </div>
+    </section>
   </main>
 
-  <footer class="foot">
-    <div class="wrap">
-      <p>Built by <a href="https://github.com/Rimsovannara">Rim Sovannara</a> — full-stack demo. Not affiliated with ABA Bank.</p>
-      <p class="muted small">Source &amp; docs: <a href="https://github.com/Rimsovannara/khqr-checkout">github.com/Rimsovannara/khqr-checkout</a></p>
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__content">
+      <p class="footer__text">
+        Built by <a href="https://github.com/Rimsovannara" class="footer__link">Rim Sovannara</a> 
+        — Full-stack demo using <a href="https://github.com/Rimsovannara/khqr-checkout" class="footer__link">ABA PayWay</a>
+      </p>
+      <p class="footer__meta">Not affiliated with ABA Bank or any financial institutions</p>
     </div>
   </footer>
 
-  <!-- sticky checkout bar (shows when cart has items) -->
-  <div id="checkoutBar" class="checkout-bar" hidden>
-    <div class="wrap checkout-bar-in">
-      <button id="barReview" class="bar-review" aria-label="Review cart">
-        <span id="barCount">0 items</span>
-        <strong id="barTotal">$0.00</strong>
+  <!-- Sticky Checkout Bar -->
+  <div id="checkoutBar" class="checkout-bar" hidden role="status" aria-label="Checkout summary">
+    <div class="checkout-bar__inner">
+      <button id="barReview" class="checkout-bar__summary" type="button">
+        <span id="barCount" class="checkout-bar__count">0 items</span>
+        <strong id="barTotal" class="checkout-bar__total">$0.00</strong>
       </button>
-      <button id="barCheckout" class="btn btn-primary">Checkout →</button>
+      <button id="barCheckout" class="btn btn--primary">Checkout</button>
     </div>
   </div>
 
-  <!-- cart drawer -->
-  <div id="cartOverlay" class="overlay" hidden></div>
-  <aside id="cartDrawer" class="drawer" hidden aria-label="Your cart">
-    <div class="drawer-head">
-      <h3>Your order</h3>
-      <button id="cartClose" class="icon-btn" aria-label="Close">✕</button>
+  <!-- Cart Drawer -->
+  <div id="cartOverlay" class="overlay" hidden aria-hidden="true"></div>
+  <aside id="cartDrawer" class="drawer drawer--cart" hidden role="dialog" aria-label="Shopping cart" aria-modal="true">
+    <div class="drawer__header">
+      <h3 class="drawer__title">Your Cart</h3>
+      <button id="cartClose" class="drawer__close" aria-label="Close cart" type="button">
+        <span aria-hidden="true">✕</span>
+      </button>
     </div>
-    <div id="cartLines" class="cart-lines"><!-- lines injected --></div>
-    <div class="drawer-foot">
-      <div class="total-row"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
-      <button id="checkoutBtn" class="btn btn-primary btn-block" disabled>Checkout</button>
+    <div id="cartLines" class="cart-items" role="region" aria-live="polite">
+      <!-- Cart items injected here -->
+    </div>
+    <div class="drawer__footer">
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+      <button id="checkoutBtn" class="btn btn--primary btn--block" type="button" disabled>
+        Proceed to checkout
+      </button>
     </div>
   </aside>
 
-  <!-- checkout modal -->
-  <div id="payOverlay" class="overlay" hidden></div>
+  <!-- Checkout Modal -->
+  <div id="payOverlay" class="overlay" hidden aria-hidden="true"></div>
   <div id="payModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="payTitle">
-    <button id="payClose" class="icon-btn modal-close" aria-label="Close">✕</button>
+    <button id="payClose" class="modal__close" aria-label="Close checkout" type="button">
+      <span aria-hidden="true">✕</span>
+    </button>
 
-    <!-- step indicator -->
-    <ol id="steps" class="steps" aria-hidden="true">
-      <li class="on" data-s="1">Details</li>
-      <li data-s="2">Pay</li>
-      <li data-s="3">Done</li>
+    <!-- Step Indicator -->
+    <ol id="steps" class="steps" aria-label="Checkout steps">
+      <li class="steps__item steps__item--active" data-s="1">
+        <span class="steps__number">1</span>
+        <span class="steps__label">Details</span>
+      </li>
+      <li class="steps__item" data-s="2">
+        <span class="steps__number">2</span>
+        <span class="steps__label">Pay</span>
+      </li>
+      <li class="steps__item" data-s="3">
+        <span class="steps__number">3</span>
+        <span class="steps__label">Done</span>
+      </li>
     </ol>
 
-    <!-- step 1: review + details -->
-    <section id="stepDetails" class="pay-step">
-      <h3 id="payTitle">Review &amp; pay</h3>
-      <div id="orderSummary" class="order-summary"><!-- summary injected --></div>
-      <form id="custForm" class="cust-form" novalidate>
-        <div class="field-row">
-          <label>First name<input id="fFirst" name="firstname" value="Sok" autocomplete="given-name" required /></label>
-          <label>Last name<input id="fLast" name="lastname" value="Dara" autocomplete="family-name" required /></label>
+    <!-- Step 1: Review Details -->
+    <section id="stepDetails" class="modal__step" role="region" aria-labelledby="payTitle">
+      <h3 id="payTitle" class="modal__heading">Order Summary</h3>
+      <div id="orderSummary" class="order-summary" role="region" aria-label="Order items and total">
+        <!-- Order summary injected here -->
+      </div>
+      <form id="custForm" class="form" novalidate>
+        <div class="form__group form__group--row">
+          <label class="form__label">
+            <span class="form__label-text">First name</span>
+            <input id="fFirst" name="firstname" type="text" value="Sok" autocomplete="given-name" required class="form__input" />
+          </label>
+          <label class="form__label">
+            <span class="form__label-text">Last name</span>
+            <input id="fLast" name="lastname" type="text" value="Dara" autocomplete="family-name" required class="form__input" />
+          </label>
         </div>
-        <label>Email<input id="fEmail" name="email" type="email" value="sok@example.com" autocomplete="email" required /></label>
-        <label>Phone <span class="opt">(optional)</span><input id="fPhone" name="phone" type="tel" autocomplete="tel" placeholder="0XX XXX XXX" /></label>
-        <button type="submit" id="payGo" class="btn btn-primary btn-block">
-          <span class="btn-label">Show KHQR · <span id="payGoTotal">$0.00</span></span>
-          <span class="spinner" hidden></span>
+        <label class="form__label">
+          <span class="form__label-text">Email</span>
+          <input id="fEmail" name="email" type="email" value="sok@example.com" autocomplete="email" required class="form__input" />
+        </label>
+        <label class="form__label">
+          <span class="form__label-text">Phone <span class="form__optional">(optional)</span></span>
+          <input id="fPhone" name="phone" type="tel" autocomplete="tel" placeholder="012 345 678" class="form__input" />
+        </label>
+        <button type="submit" id="payGo" class="btn btn--primary btn--block btn--large" aria-busy="false">
+          <span class="btn__text">Show KHQR · <span id="payGoTotal">$0.00</span></span>
+          <span class="btn__spinner" hidden aria-hidden="true"></span>
         </button>
       </form>
     </section>
 
-    <!-- step 2: QR -->
-    <section id="stepQr" class="pay-step" hidden>
-      <h3>Scan to pay</h3>
+    <!-- Step 2: QR Code -->
+    <section id="stepQr" class="modal__step" hidden role="region" aria-label="Payment QR code">
+      <h3 class="modal__heading">Scan to Pay</h3>
       <div class="khqr-card">
-        <div class="khqr-top"><span class="khqr-brand">KHQR</span><span id="qrAmount" class="khqr-amount">$0.00</span></div>
-        <div id="qrBox" class="qr-box"><!-- QR injected --></div>
-        <p class="khqr-merchant">SANG CAFE CO., LTD</p>
-        <p id="qrTran" class="muted small mono center"></p>
+        <div class="khqr-card__header">
+          <span class="khqr-card__brand">KHQR</span>
+          <span id="qrAmount" class="khqr-card__amount">$0.00</span>
+        </div>
+        <div id="qrBox" class="khqr-card__qr">
+          <!-- QR code injected here -->
+        </div>
+        <p class="khqr-card__merchant">SANG CAFE CO., LTD</p>
+        <p id="qrTran" class="khqr-card__reference"></p>
+        <p class="khqr-card__hint">Open your banking app → Scan QR → Confirm payment</p>
       </div>
-      <p class="muted small center">Open your banking app → <b>Scan QR</b> → confirm.</p>
-      <button id="simulatePay" class="btn btn-primary btn-block">Simulate payment (demo)</button>
-      <button id="qrBack" class="btn btn-ghost btn-block">← Back</button>
+      <div class="modal__actions">
+        <button id="simulatePay" class="btn btn--primary btn--block" type="button">Confirm payment</button>
+        <button id="qrBack" class="btn btn--secondary btn--block" type="button">← Back</button>
+      </div>
     </section>
 
-    <!-- step 3: success -->
-    <section id="stepDone" class="pay-step center" hidden>
-      <div class="check" aria-hidden="true">✓</div>
-      <h3>Payment received</h3>
-      <p class="muted">Thank you! Your order is confirmed.</p>
-      <div class="done-meta">
-        <div><span>Order</span><strong id="doneTran" class="mono"></strong></div>
-        <div><span>Paid</span><strong id="doneAmount"></strong></div>
+    <!-- Step 3: Success -->
+    <section id="stepDone" class="modal__step modal__step--center" hidden role="region" aria-label="Payment confirmed">
+      <div class="success-icon" aria-hidden="true">✓</div>
+      <h3 class="modal__heading">Payment Confirmed</h3>
+      <p class="modal__description">Your order has been received and will be prepared shortly.</p>
+      <div class="success-details">
+        <div class="success-details__row">
+          <span class="success-details__label">Order</span>
+          <strong id="doneTran" class="success-details__value"></strong>
+        </div>
+        <div class="success-details__row">
+          <span class="success-details__label">Amount</span>
+          <strong id="doneAmount" class="success-details__value"></strong>
+        </div>
       </div>
-      <button id="payFinish" class="btn btn-primary btn-block">Back to shop</button>
+      <button id="payFinish" class="btn btn--primary btn--block btn--large" type="button">Back to shop</button>
     </section>
   </div>
 
-  <div id="toast" class="toast" hidden></div>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
