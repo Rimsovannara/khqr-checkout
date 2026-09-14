@@ -14,114 +14,136 @@
   <!-- top bar -->
   <header class="topbar">
     <div class="wrap topbar-in">
-      <div class="brand">
+      <a class="brand" href="#top">
         <span class="logo">ស</span>
-        <div>
+        <span class="brand-text">
           <strong>Sang Café</strong>
           <span class="brand-sub">សាំងកាហ្វេ · Phnom Penh</span>
-        </div>
-      </div>
+        </span>
+      </a>
       <div class="topbar-right">
-        <span id="modeBadge" class="badge badge-demo" title="Payment mode">DEMO MODE</span>
-        <button id="cartBtn" class="cart-btn" aria-label="Open cart">
-          🛒 <span id="cartCount" class="cart-count">0</span>
+        <span id="modeBadge" class="badge badge-demo" title="Payment mode">Demo mode</span>
+        <button id="cartBtn" class="cart-btn" aria-label="View cart">
+          <span class="cart-ico" aria-hidden="true">🛒</span>
+          <span id="cartCount" class="cart-count" hidden>0</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- hero -->
-  <section class="hero">
+  <section id="top" class="hero">
     <div class="wrap hero-in">
       <div class="hero-copy">
-        <p class="eyebrow">Full-stack demo · ABA PayWay integration</p>
+        <p class="eyebrow">Scan · Pay · Done</p>
         <h1>Order coffee &amp; snacks, pay by <span class="accent">KHQR</span>.</h1>
-        <p class="lede">Scan once with any Cambodian banking app — ABA, ACLEDA, Wing, and more.
-          A working storefront wired to the <a href="https://github.com/Rimsovannara/payway-node">payway-node</a> SDK.</p>
-        <a href="#menu" class="btn btn-primary">Browse the menu</a>
+        <p class="lede">One QR works with every Cambodian bank — ABA, ACLEDA, Wing and more. No app to install, no card to type.</p>
+        <a href="#menu" class="btn btn-primary">Order now</a>
       </div>
       <div class="hero-card" aria-hidden="true">
-        <div class="qr-mini">
-          <div class="qr-mini-grid" id="heroQr"></div>
-          <div class="khqr-tag">KHQR</div>
-        </div>
-        <p class="hero-card-note">One QR · every bank</p>
+        <div class="qr-mini"><div class="qr-mini-grid" id="heroQr"></div></div>
+        <span class="khqr-chip">KHQR</span>
+        <p class="hero-card-note">Scan with any bank app</p>
       </div>
     </div>
   </section>
 
   <!-- menu -->
-  <main class="wrap">
-    <section id="menu" class="menu-head">
-      <h2>Menu · ម៉ឺនុយ</h2>
-      <p class="muted">Prices in USD. Tap to add to your cart.</p>
-    </section>
-    <section id="grid" class="grid" aria-live="polite"><!-- products injected here --></section>
+  <main class="wrap" id="menu">
+    <div class="section-head">
+      <h2>Menu</h2>
+      <p class="muted">Tap <strong>Add</strong>, adjust the amount, then check out. Prices in USD.</p>
+    </div>
+    <section id="grid" class="grid" aria-live="polite"><!-- product cards injected --></section>
   </main>
 
   <footer class="foot">
     <div class="wrap">
-      <p>Built by <a href="https://github.com/Rimsovannara">Rim Sovannara</a> · full-stack demo · not affiliated with ABA Bank.</p>
-      <p class="muted small">Source: <a href="https://github.com/Rimsovannara/khqr-checkout">github.com/Rimsovannara/khqr-checkout</a></p>
+      <p>Built by <a href="https://github.com/Rimsovannara">Rim Sovannara</a> — full-stack demo. Not affiliated with ABA Bank.</p>
+      <p class="muted small">Source &amp; docs: <a href="https://github.com/Rimsovannara/khqr-checkout">github.com/Rimsovannara/khqr-checkout</a></p>
     </div>
   </footer>
 
+  <!-- sticky checkout bar (shows when cart has items) -->
+  <div id="checkoutBar" class="checkout-bar" hidden>
+    <div class="wrap checkout-bar-in">
+      <button id="barReview" class="bar-review" aria-label="Review cart">
+        <span id="barCount">0 items</span>
+        <strong id="barTotal">$0.00</strong>
+      </button>
+      <button id="barCheckout" class="btn btn-primary">Checkout →</button>
+    </div>
+  </div>
+
   <!-- cart drawer -->
   <div id="cartOverlay" class="overlay" hidden></div>
-  <aside id="cartDrawer" class="drawer" hidden aria-label="Shopping cart">
+  <aside id="cartDrawer" class="drawer" hidden aria-label="Your cart">
     <div class="drawer-head">
-      <h3>Your cart</h3>
-      <button id="cartClose" class="icon-btn" aria-label="Close cart">✕</button>
+      <h3>Your order</h3>
+      <button id="cartClose" class="icon-btn" aria-label="Close">✕</button>
     </div>
     <div id="cartLines" class="cart-lines"><!-- lines injected --></div>
     <div class="drawer-foot">
       <div class="total-row"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
-      <button id="checkoutBtn" class="btn btn-primary btn-block" disabled>Pay with KHQR</button>
+      <button id="checkoutBtn" class="btn btn-primary btn-block" disabled>Checkout</button>
     </div>
   </aside>
 
-  <!-- checkout / QR modal -->
+  <!-- checkout modal -->
   <div id="payOverlay" class="overlay" hidden></div>
   <div id="payModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="payTitle">
     <button id="payClose" class="icon-btn modal-close" aria-label="Close">✕</button>
 
-    <!-- step 1: details -->
-    <div id="stepDetails" class="pay-step">
-      <h3 id="payTitle">Checkout</h3>
-      <p class="muted small">Sandbox demo — no real payment is taken.</p>
-      <form id="custForm" class="cust-form">
+    <!-- step indicator -->
+    <ol id="steps" class="steps" aria-hidden="true">
+      <li class="on" data-s="1">Details</li>
+      <li data-s="2">Pay</li>
+      <li data-s="3">Done</li>
+    </ol>
+
+    <!-- step 1: review + details -->
+    <section id="stepDetails" class="pay-step">
+      <h3 id="payTitle">Review &amp; pay</h3>
+      <div id="orderSummary" class="order-summary"><!-- summary injected --></div>
+      <form id="custForm" class="cust-form" novalidate>
         <div class="field-row">
           <label>First name<input id="fFirst" name="firstname" value="Sok" autocomplete="given-name" required /></label>
           <label>Last name<input id="fLast" name="lastname" value="Dara" autocomplete="family-name" required /></label>
         </div>
         <label>Email<input id="fEmail" name="email" type="email" value="sok@example.com" autocomplete="email" required /></label>
-        <label>Phone (optional)<input id="fPhone" name="phone" type="tel" value="" autocomplete="tel" placeholder="0XX XXX XXX" /></label>
-        <div class="pay-summary"><span>Amount due</span><strong id="paySummaryTotal">$0.00</strong></div>
-        <button type="submit" class="btn btn-primary btn-block">Generate KHQR</button>
+        <label>Phone <span class="opt">(optional)</span><input id="fPhone" name="phone" type="tel" autocomplete="tel" placeholder="0XX XXX XXX" /></label>
+        <button type="submit" id="payGo" class="btn btn-primary btn-block">
+          <span class="btn-label">Show KHQR · <span id="payGoTotal">$0.00</span></span>
+          <span class="spinner" hidden></span>
+        </button>
       </form>
-    </div>
+    </section>
 
     <!-- step 2: QR -->
-    <div id="stepQr" class="pay-step" hidden>
+    <section id="stepQr" class="pay-step" hidden>
       <h3>Scan to pay</h3>
       <div class="khqr-card">
         <div class="khqr-top"><span class="khqr-brand">KHQR</span><span id="qrAmount" class="khqr-amount">$0.00</span></div>
-        <div id="qrBox" class="qr-box"><!-- QR canvas injected --></div>
+        <div id="qrBox" class="qr-box"><!-- QR injected --></div>
         <p class="khqr-merchant">SANG CAFE CO., LTD</p>
-        <p class="muted small" id="qrTran"></p>
+        <p id="qrTran" class="muted small mono center"></p>
       </div>
-      <p class="muted small center">Open your banking app → scan → confirm.</p>
+      <p class="muted small center">Open your banking app → <b>Scan QR</b> → confirm.</p>
       <button id="simulatePay" class="btn btn-primary btn-block">Simulate payment (demo)</button>
-      <p class="muted small center pending">⏳ Waiting for payment…</p>
-    </div>
+      <button id="qrBack" class="btn btn-ghost btn-block">← Back</button>
+    </section>
 
     <!-- step 3: success -->
-    <div id="stepDone" class="pay-step center" hidden>
-      <div class="check">✓</div>
+    <section id="stepDone" class="pay-step center" hidden>
+      <div class="check" aria-hidden="true">✓</div>
       <h3>Payment received</h3>
-      <p class="muted">Order <span id="doneTran" class="mono"></span> · <span id="doneAmount"></span></p>
+      <p class="muted">Thank you! Your order is confirmed.</p>
+      <div class="done-meta">
+        <div><span>Order</span><strong id="doneTran" class="mono"></strong></div>
+        <div><span>Paid</span><strong id="doneAmount"></strong></div>
+      </div>
       <button id="payFinish" class="btn btn-primary btn-block">Back to shop</button>
-    </div>
+    </section>
   </div>
 
   <div id="toast" class="toast" hidden></div>
