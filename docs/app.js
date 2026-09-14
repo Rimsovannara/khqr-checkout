@@ -31,6 +31,7 @@ const state = {
   await detectMode();
   state.products = await loadProducts();
   state.byId = Object.fromEntries(state.products.map((p) => [p.id, p]));
+  pruneCart(); // drop any stale ids left in localStorage from an older catalog
   renderMode();
   renderGrid();
   renderCart();
@@ -118,7 +119,19 @@ function dec(id) { state.cart[id] = (state.cart[id] || 0) - 1; if (state.cart[id
 function cartTotal() { return Object.entries(state.cart).reduce((s, [id, q]) => s + (state.byId[id]?.price || 0) * q, 0); }
 function cartArray() { return Object.entries(state.cart).map(([id, qty]) => ({ id, qty })); }
 
-function loadCart() { try { return JSON.parse(localStorage.getItem('khqr_cart') || '{}'); } catch (_) { return {}; } }
+function pruneCart() {
+  let changed = false;
+  for (const id of Object.keys(state.cart)) {
+    if (!state.byId[id] || !(state.cart[id] > 0)) { delete state.cart[id]; changed = true; }
+  }
+  if (changed) saveCart();
+}
+function loadCart() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('khqr_cart') || '{}');
+    return raw && typeof raw === 'object' ? raw : {};
+  } catch (_) { return {}; }
+}
 function saveCart() { try { localStorage.setItem('khqr_cart', JSON.stringify(state.cart)); } catch (_) {} }
 
 /* ---------- checkout ---------- */
@@ -232,5 +245,10 @@ function wireEvents() {
 
   // Returning from a real PayWay redirect: ?paid=<tran_id>
   const paid = new URLSearchParams(location.search).get('paid');
-  if (paid) { state.tranId = paid; state.cart = {}; renderCart(); openPay(); showStep('done'); $('#doneTran').textContent = paid; }
+  if (paid) {
+    state.tranId = paid; state.cart = {}; renderCart();
+    openPay(); showStep('done');
+    $('#doneTran').textContent = paid;
+    $('#doneAmount').textContent = 'paid';
+  }
 }
