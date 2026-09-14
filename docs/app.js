@@ -50,8 +50,8 @@ async function loadProducts() {
 /* ---------- rendering ---------- */
 function renderMode() {
   const b = $('#modeBadge');
-  if (state.mode === 'payway') { b.textContent = 'Live · Sandbox'; b.className = 'badge badge-live'; }
-  else { b.textContent = 'Demo mode'; b.className = 'badge badge-demo'; }
+  if (state.mode === 'payway') { b.textContent = 'Live · Sandbox'; b.className = 'badge live'; }
+  else { b.textContent = 'Demo'; b.className = 'badge'; }
 }
 
 function renderGrid() {
