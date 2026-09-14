@@ -61,7 +61,14 @@ $('#checkoutForm').addEventListener('submit', (e) => {
 let toastTimer;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), 1600); }
 
-function loadCart() { try { return JSON.parse(localStorage.getItem('khqr_cart_l') || '{}'); } catch (_) { return {}; } }
+function loadCart() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('khqr_cart_l') || '{}');
+    return raw && typeof raw === 'object' ? raw : {};
+  } catch (_) { return {}; }
+}
 function saveCart() { try { localStorage.setItem('khqr_cart_l', JSON.stringify(cart)); } catch (_) {} }
 
+// Drop any stale ids not on the current page before first render.
+Object.keys(cart).forEach((id) => { if (!meta[id] || !(cart[id] > 0)) delete cart[id]; });
 render();
