@@ -40,6 +40,10 @@
   }
 }
 *{box-sizing:border-box}
+/* Keep the [hidden] attribute authoritative even for elements whose class sets a
+   display value (.drawer, .modal, .overlay...). Without this, .drawer{display:flex}
+   overrides the browser's default and the panel shows on load. */
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
 :lang(km),.brand-sub,.km{font-family:var(--khmer)}
@@ -212,6 +216,13 @@ a:hover{text-decoration:underline}
   .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
   .card-media{font-size:42px;padding:20px 0 12px}
 }
+/* On phones the cart opens as a bottom sheet, not a full-height side panel. */
+@media (max-width:560px){
+  .drawer{top:auto;right:0;left:0;bottom:0;width:auto;max-height:82vh;border-radius:20px 20px 0 0;animation:sheet .22s ease}
+  .drawer-head{border-radius:20px 20px 0 0}
+  .modal{width:calc(100vw - 24px)}
+}
+@keyframes sheet{from{transform:translateY(24px);opacity:.5}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;scroll-behavior:auto}
 }
